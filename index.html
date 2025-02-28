@@ -1,295 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content=
-"width=device-width, initial-scale=1.0"
->
-    <title>Material Filter</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #121212;
-            color: #e0e0e0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            min-height: 100vh; 
-/* Ensure content doesn't overflow vertically */
-        }
-        h1, h2 {
-            color: #ffffff;
-            margin-top: 20px; 
-/* Ensure there's space above the title */
-        }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        button {
-            background-color: #333;
-            color: #e0e0e0;
-            padding: 10px 20px;
-            border: 2px solid #444;
-            cursor: pointer;
-            margin: 0 10px;
-        }
-        button.active {
-            background-color: #007BFF;
-            color: white;
-        }
-        button:hover {
-            background-color: #555;
-        }
-        .material {
-            background-color: #333;
-            border: 1px solid #444;
-            margin: 5px 0;
-            padding: 10px;
-            color: #e0e0e0;
-        }
-        label {
-            display: inline-block;
-            width: 200px;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-        .parameter-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 10px 0;
-        }
-        .parameter-container input {
-            width: 200px;
-            padding: 5px;
-            background-color: #222;
-            color: #e0e0e0;
-            border: 1px solid #444;
-            border-radius: 5px;
-        }
-        .parameter-container button {
-            background-color: #888;
-            color: #e0e0e0;
-            border: 1px solid #555;
-            padding: 5px 10px;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        .parameter-container button.ignore {
-            background-color: #e74c3c;
-        }
-        .info-message {
-            font-size: 16px;
-            margin-top: 20px;
-            color: #e0e0e0;
-            font-weight: bold;
-        }
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-        #results {
-            display: none;
-        }
-        .blue-text {
-            color: #1e90ff;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Material Filter - Polymer Pilot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      min-height: 100vh;
+    }
+    h1, h2 {
+      color: #ffffff;
+      margin-top: 20px;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #333;
+      color: #e0e0e0;
+      padding: 10px 20px;
+      border: 2px solid #444;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+    button.active {
+      background-color: #007BFF;
+      color: white;
+    }
+    button:hover {
+      background-color: #555;
+    }
+    .material {
+      background-color: #333;
+      border: 1px solid #444;
+      margin: 5px 0;
+      padding: 10px;
+      color: #e0e0e0;
+    }
+    label {
+      display: inline-block;
+      width: 200px;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    .parameter-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+    }
+    .parameter-container input {
+      width: 200px;
+      padding: 5px;
+      background-color: #222;
+      color: #e0e0e0;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+    .parameter-container button {
+      background-color: #888;
+      color: #e0e0e0;
+      border: 1px solid #555;
+      padding: 5px 10px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .parameter-container button.ignore {
+      background-color: #e74c3c;
+    }
+    .info-message {
+      font-size: 16px;
+      margin-top: 20px;
+      color: #e0e0e0;
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+    #results {
+      display: none;
+    }
+    .blue-text {
+      color: #1e90ff;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Polymer Pilot</h1>
+  <h1>Polymer Pilot</h1>
 
-    <div class="button-container">
-        <button id="plasticButton">Plastic</button>
-        <button id="resinButton">Resin</button>
-    </div>
+  <div class="button-container">
+    <button id="plasticButton">Plastic</button>
+    <button id="resinButton">Resin</button>
+  </div>
 
-    <div class="blue-text">
-        When inputting your parameters, if you are leaving a space blank, ignore it for better results
-    </div>
+  <div class="blue-text">
+    When inputting your parameters, if you are leaving a space blank, ignore it for better results
+  </div>
 
-    <div class="parameter-container">
-        <label for="compressiveStrength">Compressive Strength (MPa):</label>
-        <input type="number" id="compressiveStrength" placeholder="Enter value">
-        <button class="toggle-button" onclick="toggleIgnore('compressive', event)">Ignore</button>
-    </div>
+  <div class="parameter-container">
+    <label for="compressiveStrength">Compressive Strength (MPa):</label>
+    <input type="number" id="compressiveStrength" placeholder="Enter value">
+    <button class="toggle-button" onclick="toggleIgnore('compressive', event)">Ignore</button>
+  </div>
 
-    <div class="parameter-container">
-        <label for="tensileStrength">Tensile Strength (MPa):</label>
-        <input type="number" id="tensileStrength" placeholder="Enter value">
-        <button class="toggle-button" onclick="toggleIgnore('tensile', event)">Ignore</button>
-    </div>
+  <div class="parameter-container">
+    <label for="tensileStrength">Tensile Strength (MPa):</label>
+    <input type="number" id="tensileStrength" placeholder="Enter value">
+    <button class="toggle-button" onclick="toggleIgnore('tensile', event)">Ignore</button>
+  </div>
 
-    <div class="parameter-container">
-        <label for="flexibility">Flexibility (Young’s Modulus, MPa):</label>
-        <input type="number" id="flexibility" placeholder="Enter value">
-        <button class="toggle-button" onclick="toggleIgnore('flexibility', event)">Ignore</button>
-    </div>
+  <div class="parameter-container">
+    <label for="flexibility">Flexibility (Young’s Modulus, MPa):</label>
+    <input type="number" id="flexibility" placeholder="Enter value">
+    <button class="toggle-button" onclick="toggleIgnore('flexibility', event)">Ignore</button>
+  </div>
 
-    <div class="parameter-container">
-        <label for="stretchability">Stretchability (Elongation at Break %):</label>
-        <input type="number" id="stretchability" placeholder="Enter value">
-        <button class="toggle-button" onclick="toggleIgnore('stretchability', event)">Ignore</button>
-    </div>
+  <div class="parameter-container">
+    <label for="stretchability">Stretchability (% Elongation at Break):</label>
+    <input type="number" id="stretchability" placeholder="Enter value">
+    <button class="toggle-button" onclick="toggleIgnore('stretchability', event)">Ignore</button>
+  </div>
 
-    <div class="parameter-container">
-        <label for="toxicity">Toxicity of Fumes (on HMIS 1-3):</label>
-        <input type="number" id="toxicity" min="1" max="3" placeholder="Enter value">
-        <button class="toggle-button" onclick="toggleIgnore('toxicity', event)">Ignore</button>
-    </div>
+  <div class="parameter-container">
+    <label for="toxicity">Toxicity of Fumes (on HMIS 1-3):</label>
+    <input type="number" id="toxicity" min="1" max="3" placeholder="Enter value">
+    <button class="toggle-button" onclick="toggleIgnore('toxicity', event)">Ignore</button>
+  </div>
 
-    <div class="parameter-container">
-        <label for="cost">Cost per kg ($):</label>
-        <input type="number" id="cost" placeholder="Enter value">
-        <button class="toggle-button" onclick="toggleIgnore('cost', event)">Ignore</button>
-    </div>
+  <div class="parameter-container">
+    <label for="cost">Cost per kg ($):</label>
+    <input type="number" id="cost" placeholder="Enter value">
+    <button class="toggle-button" onclick="toggleIgnore('cost', event)">Ignore</button>
+  </div>
 
-    <button id="filterButton">Filter Materials</button>
+  <button id="filterButton">Filter Materials</button>
 
-    <h2>Top Matching Materials</h2>
+  <h2>Top Matching Materials</h2>
 
-    <div class="info-message" id="infoMessage" style="display: none;">
-        If the material properties are not matching your specifications, try ignoring more properties and/or making heat resistance lower and fume toxicity and cost per kg higher.
-    </div>
+  <div class="info-message" id="infoMessage" style="display: none;">
+    If the material properties are not matching your specifications, try ignoring more properties and/or adjusting your values.
+  </div>
 
-    <div id="errorMessage" class="error"></div>
-    <div id="results"></div>
+  <div id="errorMessage" class="error"></div>
+  <div id="results"></div>
 
-    <script>
-        const materials = [
-            { name: "PLA", compressive: 55, tensile: 45, flexibility: 1806, stretchability: 5, toxicity: 1, cost: 28, type: "plastic" },
-            { name: "ABS", compressive: 45, tensile: 50, flexibility: 2200, stretchability: 28, toxicity: 3, cost: 30, type: "plastic" },
-            { name: "PETG", compressive: 70, tensile: 50, flexibility: 2100, stretchability: 20, toxicity: 1, cost: 30, type: "plastic" },
-            { name: "Nylon", compressive: 80, tensile: 80, flexibility: 350, stretchability: 170, toxicity: 3, cost: 40, type: "plastic" },
-            { name: "TPU", compressive: 45, tensile: 60, flexibility: 200, stretchability: 550, toxicity: 3, cost: 40, type: "plastic" },
-            { name: "PP", compressive: 40, tensile: 40, flexibility: 1400, stretchability: 100, toxicity: 1, cost: 40, type: "plastic" },
-            { name: "PVA", compressive: 20, tensile: 50, flexibility: 600, stretchability: 320, toxicity: 1, cost: 50, type: "resin" },
-            { name: "PC", compressive: 75, tensile: 67, flexibility: 2400, stretchability: 110, toxicity: 2, cost: 27, type: "plastic" },
-            { name: "PS", compressive: 32, tensile: 20.6, flexibility: 2250, stretchability: 10, toxicity: 2, cost: 19, type: "plastic" },
-            { name: "PE", compressive: 20, tensile: 22, flexibility: 1200, stretchability: 750, toxicity: 1, cost: 65, type: "plastic" },
-            { name: "TPE", compressive: 5, tensile: 50, flexibility: 162, stretchability: 500, toxicity: 1, cost: 36, type: "plastic" },
-            { name: "HIPS", compressive: 26, tensile: 32, flexibility: 3500, stretchability: 50, toxicity: 1, cost: 37, type: "plastic" }
-        ];
+  <script>
+    // New, corrected material data with a "heatResistance" property (glass transition temperature).
+    const materials = [
+      { name: "ASA", compressive: 125, tensile: 50, flexibility: 3150, stretchability: 2.5, toxicity: 3, heatResistance: 175, cost: 45, type: "plastic" },
+      { name: "PCABS", compressive: 100, tensile: 50, flexibility: 2400, stretchability: 3.5, toxicity: 2, heatResistance: 125, cost: 75, type: "plastic" },
+      { name: "PPS", compressive: 200, tensile: 85, flexibility: 3950, stretchability: 0.35, toxicity: 2, heatResistance: 285, cost: 150, type: "plastic" },
+      { name: "PEEK", compressive: 100, tensile: 105, flexibility: 3800, stretchability: 1.0, toxicity: 2, heatResistance: 143, cost: 350, type: "plastic" },
+      { name: "PHA", compressive: 50, tensile: 40, flexibility: 2500, stretchability: 3.5, toxicity: 2, heatResistance: 50, cost: 115, type: "plastic" },
+      { name: "PCL", compressive: 40, tensile: 30, flexibility: 350, stretchability: 10, toxicity: 2, heatResistance: 60, cost: 45, type: "plastic" },
+      { name: "PBAT", compressive: 40, tensile: 30, flexibility: 1150, stretchability: 10, toxicity: 2, heatResistance: 60, cost: 75, type: "plastic" },
+      { name: "Carbon Fiber", compressive: 300, tensile: 200, flexibility: 45000, stretchability: 1.25, toxicity: 2, heatResistance: "Dependent on Resin Matrix", cost: 300, type: "plastic" }
+    ];
 
-        let currentMaterialType = ""; 
-        const ignoredParameters = {
-            compressive: false,
-            tensile: false,
-            flexibility: false,
-            stretchability: false,
-            toxicity: false,
-            cost: false
-        };
+    let currentMaterialType = ""; 
+    const ignoredParameters = {
+      compressive: false,
+      tensile: false,
+      flexibility: false,
+      stretchability: false,
+      toxicity: false,
+      cost: false
+    };
 
-        document.getElementById('plasticButton').addEventListener('click', () => {
-            currentMaterialType = "plastic";
-            updateButtonStyles();
+    document.getElementById('plasticButton').addEventListener('click', () => {
+      currentMaterialType = "plastic";
+      updateButtonStyles();
+    });
+
+    document.getElementById('resinButton').addEventListener('click', () => {
+      currentMaterialType = "resin";
+      updateButtonStyles();
+    });
+
+    function updateButtonStyles() {
+      document.getElementById('plasticButton').classList.remove('active');
+      document.getElementById('resinButton').classList.remove('active');
+      if (currentMaterialType === "plastic") {
+        document.getElementById('plasticButton').classList.add('active');
+      } else if (currentMaterialType === "resin") {
+        document.getElementById('resinButton').classList.add('active');
+      }
+      document.getElementById("errorMessage").innerHTML = '';
+      document.getElementById("results").innerHTML = '';
+    }
+
+    function toggleIgnore(parameter, event) {
+      ignoredParameters[parameter] = !ignoredParameters[parameter];
+      event.target.classList.toggle("ignore", ignoredParameters[parameter]);
+    }
+
+    function filterMaterials() {
+      const errorMessageDiv = document.getElementById("errorMessage");
+      const infoMessageDiv = document.getElementById("infoMessage");
+      const resultsDiv = document.getElementById("results");
+
+      if (!currentMaterialType) {
+        errorMessageDiv.innerHTML = 'Error: Please select a material type (Plastic or Resin) before filtering.';
+        return;
+      }
+
+      const compressiveInput = parseFloat(document.getElementById("compressiveStrength").value) || 0;
+      const tensileInput = parseFloat(document.getElementById("tensileStrength").value) || 0;
+      const flexibilityInput = parseFloat(document.getElementById("flexibility").value) || 0;
+      const stretchabilityInput = parseFloat(document.getElementById("stretchability").value) || 0;
+      const toxicityInput = parseFloat(document.getElementById("toxicity").value) || 0;
+      const costInput = parseFloat(document.getElementById("cost").value) || 0;
+
+      errorMessageDiv.innerHTML = '';
+      resultsDiv.innerHTML = '';
+      infoMessageDiv.style.display = 'none';
+
+      if (!ignoredParameters.toxicity && (toxicityInput < 1 || toxicityInput > 3)) {
+        errorMessageDiv.innerHTML = 'Toxicity input must be between 1 and 3.';
+        return;
+      }
+
+      // Calculate relative contributions using percent difference when applicable.
+      const filteredMaterials = materials
+        .filter(material => material.type === currentMaterialType)
+        .map(material => {
+          let score = 0;
+          
+          if (!ignoredParameters.compressive) {
+            let diff = compressiveInput > 0 
+              ? Math.abs(material.compressive - compressiveInput) / compressiveInput 
+              : Math.abs(material.compressive - compressiveInput);
+            score += 1 / (1 + diff);
+          }
+          if (!ignoredParameters.tensile) {
+            let diff = tensileInput > 0 
+              ? Math.abs(material.tensile - tensileInput) / tensileInput 
+              : Math.abs(material.tensile - tensileInput);
+            score += 1 / (1 + diff);
+          }
+          if (!ignoredParameters.flexibility) {
+            let diff = flexibilityInput > 0 
+              ? Math.abs(material.flexibility - flexibilityInput) / flexibilityInput 
+              : Math.abs(material.flexibility - flexibilityInput);
+            score += 1 / (1 + diff);
+          }
+          if (!ignoredParameters.stretchability) {
+            let diff = stretchabilityInput > 0 
+              ? Math.abs(material.stretchability - stretchabilityInput) / stretchabilityInput 
+              : Math.abs(material.stretchability - stretchabilityInput);
+            score += 1 / (1 + diff);
+          }
+          if (!ignoredParameters.toxicity) {
+            if (material.toxicity === toxicityInput) {
+              score += 2;
+            } else if (material.toxicity <= toxicityInput) {
+              score += 1;
+            }
+          }
+          if (!ignoredParameters.cost) {
+            let diff = costInput > 0 
+              ? Math.abs(material.cost - costInput) / costInput 
+              : Math.abs(material.cost - costInput);
+            score += 1 / (1 + diff);
+          }
+          
+          return { ...material, score };
+        })
+        .filter(material => material.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5);
+
+      if (filteredMaterials.length > 0) {
+        resultsDiv.style.display = 'block';
+        filteredMaterials.forEach(material => {
+          const div = document.createElement("div");
+          div.className = 'material';
+          div.textContent = `${material.name} - Compressive: ${material.compressive} MPa, Tensile: ${material.tensile} MPa, Flexibility: ${material.flexibility} MPa, Stretchability: ${material.stretchability}%, Toxicity: ${material.toxicity}, Cost: $${material.cost}`;
+          resultsDiv.appendChild(div);
         });
+        infoMessageDiv.style.display = 'block';
+      } else {
+        resultsDiv.style.display = 'none';
+      }
+    }
 
-        document.getElementById('resinButton').addEventListener('click', () => {
-            currentMaterialType = "resin";
-            updateButtonStyles();
-        });
-
-        function updateButtonStyles() {
-            document.getElementById('plasticButton').classList.remove('active');
-            document.getElementById('resinButton').classList.remove('active');
-            if (currentMaterialType === "plastic") {
-                document.getElementById('plasticButton').classList.add('active');
-            } else if (currentMaterialType === "resin") {
-                document.getElementById('resinButton').classList.add('active');
-            }
-            document.getElementById("errorMessage").innerHTML = '';
-            document.getElementById("results").innerHTML = '';
-        }
-
-        function toggleIgnore(parameter, event) {
-            ignoredParameters[parameter] = !ignoredParameters[parameter];
-            event.target.classList.toggle("ignore", ignoredParameters[parameter]);
-        }
-
-        function filterMaterials() {
-            const errorMessageDiv = document.getElementById("errorMessage");
-            const infoMessageDiv = document.getElementById("infoMessage");
-            const resultsDiv = document.getElementById("results");
-
-            if (!currentMaterialType) {
-                errorMessageDiv.innerHTML = 'Error: Please select a material type (Plastic or Resin) before filtering.';
-                return;
-            }
-
-            const compressiveInput = parseFloat(document.getElementById("compressiveStrength").value) || 0;
-            const tensileInput = parseFloat(document.getElementById("tensileStrength").value) || 0;
-            const flexibilityInput = parseFloat(document.getElementById("flexibility").value) || 0;
-            const stretchabilityInput = parseFloat(document.getElementById("stretchability").value) || 0;
-            const toxicityInput = parseFloat(document.getElementById("toxicity").value) || 0;
-            const costInput = parseFloat(document.getElementById("cost").value) || 0;
-
-            errorMessageDiv.innerHTML = '';
-            resultsDiv.innerHTML = '';
-            infoMessageDiv.style.display = 'none';
-
-            if (!ignoredParameters.toxicity && (toxicityInput < 1 || toxicityInput > 3)) {
-                errorMessageDiv.innerHTML = 'Toxicity input must be between 1 and 3.';
-                return;
-            }
-
-            const filteredMaterials = materials
-                .filter(material => material.type === currentMaterialType)
-                .map(material => {
-                    let score = 0;
-
-                    if (!ignoredParameters.compressive) {
-                        score += 1 / (1 + Math.abs(material.compressive - compressiveInput));
-                    }
-                    if (!ignoredParameters.tensile) {
-                        score += 1 / (1 + Math.abs(material.tensile - tensileInput));
-                    }
-                    if (!ignoredParameters.flexibility) {
-                        score += 1 / (1 + Math.abs(material.flexibility - flexibilityInput));
-                    }
-                    if (!ignoredParameters.stretchability) {
-                        score += 1 / (1 + Math.abs(material.stretchability - stretchabilityInput));
-                    }
-                    if (!ignoredParameters.toxicity) {
-                        if (material.toxicity === toxicityInput) {
-                            score += 2;
-                        } else if (material.toxicity <= toxicityInput) {
-                            score += 1;
-                        }
-                    }
-                    if (!ignoredParameters.cost) {
-                        score += 1 / (1 + Math.abs(material.cost - costInput));
-                    }
-
-                    return { ...material, score };
-                })
-                .filter(material => material.score > 0)
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 5);
-
-            if (filteredMaterials.length > 0) {
-                resultsDiv.style.display = 'block';
-                filteredMaterials.forEach(material => {
-                    const div = document.createElement("div");
-                    div.className = 'material';
-                    div.textContent = `${material.name} - Compressive: ${material.compressive} MPa, Tensile: ${material.tensile} MPa, Flexibility: ${material.flexibility} MPa, Stretchability: ${material.stretchability}%, Toxicity: ${material.toxicity}, Cost: $${material.cost}`;
-                    resultsDiv.appendChild(div);
-                });
-                infoMessageDiv.style.display = 'block';
-            } else {
-                resultsDiv.style.display = 'none';
-            }
-        }
-
-        document.getElementById('filterButton').addEventListener('click', filterMaterials);
-    </script>
+    document.getElementById('filterButton').addEventListener('click', filterMaterials);
+  </script>
 </body>
 </html>
